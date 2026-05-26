@@ -1,0 +1,225 @@
+# Simple Vanilla JavaScript Pomodoro Timer
+
+Save this as `index.html` and open it in your browser.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomodoro Timer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      width: 320px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+
+    .timer {
+      font-size: 4rem;
+      margin: 30px 0;
+      font-weight: bold;
+    }
+
+    .status {
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    .start {
+      background: #2ecc71;
+      color: white;
+    }
+
+    .pause {
+      background: #f1c40f;
+      color: black;
+    }
+
+    .reset {
+      background: #3498db;
+      color: white;
+    }
+
+    .mode-buttons {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .mode-buttons button {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    .mode-buttons button.active {
+      background: white;
+      color: #ff6b6b;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pomodoro Timer</h1>
+
+    <div class="mode-buttons">
+      <button id="pomodoroBtn" class="active">Pomodoro</button>
+      <button id="shortBreakBtn">Short Break</button>
+      <button id="longBreakBtn">Long Break</button>
+    </div>
+
+    <div class="status" id="status">Focus Time</div>
+    <div class="timer" id="timer">25:00</div>
+
+    <div class="buttons">
+      <button class="start" id="startBtn">Start</button>
+      <button class="pause" id="pauseBtn">Pause</button>
+      <button class="reset" id="resetBtn">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    const timerDisplay = document.getElementById('timer');
+    const statusDisplay = document.getElementById('status');
+
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const pomodoroBtn = document.getElementById('pomodoroBtn');
+    const shortBreakBtn = document.getElementById('shortBreakBtn');
+    const longBreakBtn = document.getElementById('longBreakBtn');
+
+    let timer;
+    let timeLeft = 25 * 60;
+    let currentMode = 'Pomodoro';
+    let isRunning = false;
+
+    const modes = {
+      Pomodoro: 25 * 60,
+      'Short Break': 5 * 60,
+      'Long Break': 15 * 60
+    };
+
+    function updateDisplay() {
+      const minutes = Math.floor(timeLeft / 60)
+        .toString()
+        .padStart(2, '0');
+
+      const seconds = (timeLeft % 60)
+        .toString()
+        .padStart(2, '0');
+
+      timerDisplay.textContent = `${minutes}:${seconds}`;
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+
+      isRunning = true;
+
+      timer = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateDisplay();
+        } else {
+          clearInterval(timer);
+          isRunning = false;
+          alert(`${currentMode} complete!`);
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timer);
+      isRunning = false;
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      timeLeft = modes[currentMode];
+      updateDisplay();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      statusDisplay.textContent = mode;
+
+      document
+        .querySelectorAll('.mode-buttons button')
+        .forEach(btn => btn.classList.remove('active'));
+
+      if (mode === 'Pomodoro') {
+        pomodoroBtn.classList.add('active');
+      } else if (mode === 'Short Break') {
+        shortBreakBtn.classList.add('active');
+      } else {
+        longBreakBtn.classList.add('active');
+      }
+
+      resetTimer();
+    }
+
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', resetTimer);
+
+    pomodoroBtn.addEventListener('click', () => setMode('Pomodoro'));
+    shortBreakBtn.addEventListener('click', () => setMode('Short Break'));
+    longBreakBtn.addEventListener('click', () => setMode('Long Break'));
+
+    updateDisplay();
+  </script>
+</body>
+</html>
+```
