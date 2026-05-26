@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confetti App</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-color: #f9fafb;
+            --text-color: #111827;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 { margin-bottom: 2rem; }
+
+        #confetti-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.25rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 600;
+        }
+
+        #confetti-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #confetti-btn:focus-visible {
+            outline: 3px solid #a5b4fc;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <h1>Celebrate!</h1>
+        <button id="confetti-btn" aria-label="Trigger confetti animation">
+            Throw Confetti!
+        </button>
+    </main>
+
+    <script>
+        /**
+         * CONFIGURATION
+         * Teacher-editable content
+         */
+        const CONFIG = {
+            confettiSettings: {
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            }
+        };
+
+        // DOM elements
+        const btn = document.getElementById('confetti-btn');
+
+        // Function to trigger animation
+        const triggerConfetti = () => {
+            confetti(CONFIG.confettiSettings);
+        };
+
+        // Event listeners
+        btn.addEventListener('click', triggerConfetti);
+        
+        // Add keyboard support (Enter or Space triggered automatically by button click)
+    </script>
+</body>
+</html>
